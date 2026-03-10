@@ -2,6 +2,8 @@ package com.app.ChatApplication.entity;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -20,16 +22,18 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @OneToMany(mappedBy = "user")
+    private Set<RoomMember> roomMember;
+
     public User(String username, String email, String password)
     {
         this.username = username;
         this.email = email;
         this.password = password;
+        roomMember = new HashSet<RoomMember>();
     }
 
-    public User() {
-        this("System","example@mail.com","123456");
-    }
+    public User() { }
 
     public UUID getId() {
         return id;
@@ -61,5 +65,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<RoomMember> getRoomMember() {
+        return roomMember;
+    }
+
+    public void setRoomMember(Set<RoomMember> roomMember) {
+        this.roomMember = roomMember;
     }
 }
