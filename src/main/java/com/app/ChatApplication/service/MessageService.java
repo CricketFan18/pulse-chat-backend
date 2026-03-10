@@ -8,7 +8,10 @@ import com.app.ChatApplication.repository.MessageRepository;
 import com.app.ChatApplication.repository.RoomRepository;
 import com.app.ChatApplication.repository.UserRepository;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import java.util.List;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,6 +42,21 @@ public class MessageService {
             return new ChatMessageResponse(msg.getId(),msg.getContent(),user.getUsername(),new Date());
         }
         else
-            throw new RuntimeException();
+            throw new RuntimeException("Room or user does not exist");
+    }
+
+    public List<ChatMessageResponse> getRoomMessages(UUID roomId, int page, int size) {
+        // pagination request (Page X, with Y items per page)
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Message> messagePage = messageRepository.findByRoomIdOrderByTimestampDesc(roomId, pageable);
+
+        return messagePage.getContent().stream()
+                .map(msg -> new ChatMessageResponse(
+                        msg.getId(),
+                        msg.getContent(),
+                        msg.getUser().getUsername(),
+                        msg.getTimestamp()
+                )).toList();
     }
 }

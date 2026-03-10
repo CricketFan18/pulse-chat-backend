@@ -27,7 +27,7 @@ public class UserService {
     public void registerUser(RegisterRequest request)
     {
         if(userRepository.findByEmail(request.email()).isPresent() || userRepository.findByUsername(request.username()).isPresent())
-            throw new RuntimeException();
+            throw new RuntimeException("User already exists with this email");
 
         String hashedPassword = passwordEncoder.encode(request.password());
         User user = new User(request.username(),request.email(),hashedPassword);
@@ -38,10 +38,10 @@ public class UserService {
 
         Optional<User> user = userRepository.findByEmail(request.email());
         if(user.isEmpty())
-            throw new Exception();
+            throw new Exception("User is not registered");
 
         if(!passwordEncoder.matches(request.password(),user.get().getPassword()))
-            throw  new Exception();
+            throw  new Exception("Wrong password");
 
         return  new AuthResponse(jwtService.generateToken(request.email()));
     }
