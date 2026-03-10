@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface RoomMemeberRepository extends JpaRepository<RoomMember, UUID> {
+public interface RoomMemberRepository extends JpaRepository<RoomMember, UUID> {
     boolean existsByUserAndRoom(User user, Room room);
 }

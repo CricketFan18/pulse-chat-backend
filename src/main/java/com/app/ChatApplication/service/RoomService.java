@@ -5,24 +5,23 @@ import com.app.ChatApplication.dto.RoomResponse;
 import com.app.ChatApplication.entity.Room;
 import com.app.ChatApplication.entity.RoomMember;
 import com.app.ChatApplication.entity.User;
-import com.app.ChatApplication.repository.RoomMemeberRepository;
+import com.app.ChatApplication.repository.RoomMemberRepository;
 import com.app.ChatApplication.repository.RoomRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class RoomService {
     private final RoomRepository roomRepository;
-    private  final RoomMemeberRepository roomMemeberRepository;
+    private  final RoomMemberRepository roomMemberRepository;
 
 
-    public RoomService(RoomRepository roomRepository, RoomMemeberRepository roomMemeberRepository) {
+    public RoomService(RoomRepository roomRepository, RoomMemberRepository roomMemberRepository) {
         this.roomRepository = roomRepository;
-        this.roomMemeberRepository = roomMemeberRepository;
+        this.roomMemberRepository = roomMemberRepository;
     }
 
     @Transactional
@@ -32,7 +31,7 @@ public class RoomService {
         roomRepository.save(room);
 
         RoomMember roomMember = new RoomMember(currentUser,room);
-        roomMemeberRepository.save(roomMember);
+        roomMemberRepository.save(roomMember);
 
         return new RoomResponse(room.getId(),room.getName(),room.getDescription());
     }
@@ -52,9 +51,9 @@ public class RoomService {
                 .orElseThrow(() -> new RuntimeException("Room not found"));
 
         // Check for duplicates before saving
-        if (!roomMemeberRepository.existsByUserAndRoom(currentUser, room)) {
+        if (!roomMemberRepository.existsByUserAndRoom(currentUser, room)) {
             RoomMember roomMember = new RoomMember(currentUser, room);
-            roomMemeberRepository.save(roomMember);
+            roomMemberRepository.save(roomMember);
         }
 
         return new RoomResponse(room.getId(), room.getName(), room.getDescription());
