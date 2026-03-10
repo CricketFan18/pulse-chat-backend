@@ -55,3 +55,4 @@ out/
 # Secrets (Optional, but highly recommended if you extract passwords from application.properties later)
 *.env
 secrets.properties
+src/main/resources/application.properties
